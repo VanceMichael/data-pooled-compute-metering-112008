@@ -1,0 +1,40 @@
+[
+  {
+    "step": "live",
+    "path": "/metering/north",
+    "field": [
+      "records",
+      3,
+      "generation"
+    ],
+    "value": 2
+  },
+  {
+    "step": "gap",
+    "path": "/metering/south",
+    "field": [
+      "missing",
+      0,
+      0
+    ],
+    "value": "2026-11-30T23:59:00Z"
+  },
+  {
+    "step": "close",
+    "path": "/accounting/acks",
+    "field": [
+      0,
+      "status"
+    ],
+    "value": "cleared"
+  },
+  {
+    "step": "late",
+    "path": "/scheduler/assignment",
+    "field": [
+      3,
+      "revises"
+    ],
+    "value": "A2"
+  }
+]

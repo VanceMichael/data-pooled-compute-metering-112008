@@ -1,0 +1,513 @@
+{
+  "steps": [
+    "live",
+    "split",
+    "gap",
+    "close",
+    "late",
+    "replay"
+  ],
+  "routes": {
+    "common": {
+      "GET /scheduler/jobs": {
+        "status": 200,
+        "body": [
+          {
+            "job": "J0",
+            "attempt": "T0",
+            "project": "P1",
+            "pool": "north",
+            "slot": "N4",
+            "migration": "M7",
+            "billable": true
+          },
+          {
+            "job": "J0",
+            "attempt": "T1",
+            "project": "P1",
+            "pool": "south",
+            "slot": "S4",
+            "migration": "M7",
+            "billable": true
+          },
+          {
+            "job": "J2",
+            "attempt": "T3",
+            "project": "P3",
+            "pool": "south",
+            "slot": "S8",
+            "billable": false,
+            "state": "cancelled"
+          }
+        ]
+      },
+      "GET /scheduler/permits": {
+        "status": 200,
+        "body": [
+          {
+            "migration": "M7",
+            "attempts": [
+              "T0",
+              "T1"
+            ],
+            "effectiveFrom": "2026-11-30T23:58:00Z",
+            "effectiveUntil": "2026-12-01T00:03:00Z"
+          }
+        ]
+      },
+      "GET /scheduler/assignment": {
+        "status": 200,
+        "body": [
+          {
+            "id": "A1",
+            "slot": "N4",
+            "attempt": "T0",
+            "project": "P1",
+            "effectiveFrom": "2026-11-30T23:50:00Z",
+            "effectiveUntil": "2026-12-01T00:04:00Z"
+          },
+          {
+            "id": "A2",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P1",
+            "effectiveFrom": "2026-11-30T23:58:00Z",
+            "effectiveUntil": "2026-12-01T00:06:00Z"
+          },
+          {
+            "id": "A3",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P2",
+            "effectiveFrom": "2026-12-01T00:03:00Z",
+            "effectiveUntil": "2026-12-01T00:06:00Z"
+          }
+        ]
+      },
+      "GET /metering/catalog": {
+        "status": 200,
+        "body": {
+          "pools": {
+            "north": "/metering/north",
+            "south": "/metering/south"
+          }
+        }
+      },
+      "GET /metering/north": {
+        "status": 200,
+        "body": {
+          "records": [
+            {
+              "slot": "N4",
+              "generation": 1,
+              "at": "2026-11-30T23:56:00Z",
+              "seconds": 90
+            },
+            {
+              "slot": "N4",
+              "generation": 1,
+              "at": "2026-11-30T23:59:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "N4",
+              "generation": 1,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 180
+            },
+            {
+              "slot": "N4",
+              "generation": 2,
+              "at": "2026-12-01T00:01:00Z",
+              "seconds": 0
+            },
+            {
+              "slot": "N4",
+              "generation": 2,
+              "at": "2026-12-01T00:04:00Z",
+              "seconds": 50
+            }
+          ],
+          "missing": []
+        }
+      },
+      "GET /metering/south": {
+        "status": 200,
+        "body": {
+          "records": [
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-11-30T23:58:00Z",
+              "seconds": 0
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 30
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:02:00Z",
+              "seconds": 60
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 50
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 80
+            }
+          ],
+          "missing": []
+        }
+      },
+      "GET /accounting/rates": {
+        "status": 200,
+        "body": {
+          "north": 2,
+          "south": 3
+        }
+      },
+      "GET /accounting/windows": {
+        "status": 200,
+        "body": {
+          "periods": [
+            "2026-11",
+            "2026-12",
+            "2027-01"
+          ],
+          "close": [
+            "north:2026-11",
+            "south:2026-11"
+          ],
+          "adjustmentTarget": "2026-12"
+        }
+      },
+      "POST /accounting/submit": {
+        "status": 202,
+        "body": {
+          "status": "received"
+        }
+      },
+      "GET /accounting/acks": {
+        "status": 200,
+        "body": []
+      }
+    },
+    "live": {},
+    "split": {},
+    "gap": {
+      "GET /metering/south": {
+        "status": 200,
+        "body": {
+          "records": [
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-11-30T23:58:00Z",
+              "seconds": 0
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:02:00Z",
+              "seconds": 60
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 50
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 80
+            }
+          ],
+          "missing": [
+            [
+              "2026-11-30T23:59:00Z",
+              "2026-12-01T00:01:00Z"
+            ]
+          ]
+        }
+      }
+    },
+    "close": {
+      "GET /accounting/acks": {
+        "status": 200,
+        "body": [
+          {
+            "scope": "south:2026-11",
+            "project": "P1",
+            "sourceInterval": [
+              "2026-11-30T23:58:00Z",
+              "2026-12-01T00:00:00Z"
+            ],
+            "slot": "S4",
+            "status": "cleared"
+          },
+          {
+            "scope": "north:2026-11",
+            "project": "P1",
+            "status": "received"
+          }
+        ]
+      }
+    },
+    "late": {
+      "GET /scheduler/assignment": {
+        "status": 200,
+        "body": [
+          {
+            "id": "A1",
+            "slot": "N4",
+            "attempt": "T0",
+            "project": "P1",
+            "effectiveFrom": "2026-11-30T23:50:00Z",
+            "effectiveUntil": "2026-12-01T00:04:00Z"
+          },
+          {
+            "id": "A2",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P1",
+            "effectiveFrom": "2026-11-30T23:58:00Z",
+            "effectiveUntil": "2026-12-01T00:06:00Z"
+          },
+          {
+            "id": "A3",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P2",
+            "effectiveFrom": "2026-12-01T00:03:00Z",
+            "effectiveUntil": "2026-12-01T00:06:00Z"
+          },
+          {
+            "id": "A4",
+            "revises": "A2",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P4",
+            "effectiveFrom": "2026-11-30T23:58:00Z",
+            "effectiveUntil": "2026-12-01T00:03:00Z"
+          }
+        ]
+      },
+      "GET /metering/south": {
+        "status": 200,
+        "body": {
+          "records": [
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-11-30T23:58:00Z",
+              "seconds": 0
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 30
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:02:00Z",
+              "seconds": 60
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 50
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 80
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:03:00Z",
+              "seconds": 105
+            }
+          ],
+          "missing": []
+        }
+      },
+      "GET /accounting/acks": {
+        "status": 200,
+        "body": [
+          {
+            "scope": "south:2026-11",
+            "project": "P1",
+            "sourceInterval": [
+              "2026-11-30T23:58:00Z",
+              "2026-12-01T00:00:00Z"
+            ],
+            "slot": "S4",
+            "status": "cleared"
+          },
+          {
+            "scope": "north:2026-11",
+            "project": "P1",
+            "status": "received"
+          }
+        ]
+      }
+    },
+    "replay": {
+      "GET /scheduler/assignment": {
+        "status": 200,
+        "body": [
+          {
+            "id": "A1",
+            "slot": "N4",
+            "attempt": "T0",
+            "project": "P1",
+            "effectiveFrom": "2026-11-30T23:50:00Z",
+            "effectiveUntil": "2026-12-01T00:04:00Z"
+          },
+          {
+            "id": "A2",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P1",
+            "effectiveFrom": "2026-11-30T23:58:00Z",
+            "effectiveUntil": "2026-12-01T00:06:00Z"
+          },
+          {
+            "id": "A3",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P2",
+            "effectiveFrom": "2026-12-01T00:03:00Z",
+            "effectiveUntil": "2026-12-01T00:06:00Z"
+          },
+          {
+            "id": "A4",
+            "revises": "A2",
+            "slot": "S4",
+            "attempt": "T1",
+            "project": "P4",
+            "effectiveFrom": "2026-11-30T23:58:00Z",
+            "effectiveUntil": "2026-12-01T00:03:00Z"
+          }
+        ]
+      },
+      "GET /metering/south": {
+        "status": 200,
+        "body": {
+          "records": [
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-11-30T23:58:00Z",
+              "seconds": 0
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 30
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:02:00Z",
+              "seconds": 60
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 150
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:00:00Z",
+              "seconds": 50
+            },
+            {
+              "slot": "S8",
+              "generation": 1,
+              "at": "2026-12-01T00:05:00Z",
+              "seconds": 80
+            },
+            {
+              "slot": "S4",
+              "generation": 3,
+              "at": "2026-12-01T00:03:00Z",
+              "seconds": 105
+            }
+          ],
+          "missing": []
+        }
+      },
+      "GET /accounting/acks": {
+        "status": 200,
+        "body": [
+          {
+            "scope": "south:2026-11",
+            "project": "P1",
+            "sourceInterval": [
+              "2026-11-30T23:58:00Z",
+              "2026-12-01T00:00:00Z"
+            ],
+            "slot": "S4",
+            "status": "cleared"
+          },
+          {
+            "scope": "north:2026-11",
+            "project": "P1",
+            "status": "received"
+          }
+        ]
+      }
+    }
+  }
+}
