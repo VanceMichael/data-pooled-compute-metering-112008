@@ -8,6 +8,9 @@
   },
   "scripts": {
     "start": "node sources/source.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "demo": "node scripts/demo.mjs",
+    "reconcile": "node src/cli.mjs run",
+    "report": "node src/cli.mjs report"
   }
 }
